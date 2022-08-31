@@ -9,28 +9,40 @@ Servo dedoMindinho, dedoAnelar, dedodoMeio, dedoIndicador, dedoPolegar;
 // Set web server port number to 80
 WiFiServer server(80);
 
-void deAbertoparaFechado(Servo serv){
+void deAbertoparaFechado(Servo serv, int positionNumber){
+  
+serv.attach(positionNumber);
 
   int pos;
   for (pos = serv.read(); pos <= 145; pos += 1) { // movimento de 0 a 180º
     // crescente
     serv.write(pos);              // escreve posicao em meuservo
-    delay(20);                       // aguarda 35ms
+    delay(4);                       // aguarda 35ms
   }
+  
+  serv.detach();
 }
 
-void deFechadoparaAberto(Servo serv){
+void deFechadoparaAberto(Servo serv, int positionNumber){
 
+serv.attach(positionNumber);
   int pos;
-  for (pos = serv.read(); pos >= -0; pos -= 1) { // movimento de 0 a 180º
+  for (pos = serv.read(); pos >= 0; pos -= 1) { // movimento de 0 a 180º
     // crescente
     serv.write(pos);              // escreve posicao em meuservo
-    delay(20);                       // aguarda 35ms
+    delay(4);                       // aguarda 35ms
   }
+  
+  serv.detach();
 }
 
 void posicaoOriginal(){
-
+  dedoMindinho.attach(14);  //D5
+  dedoAnelar.attach(16);  //D0
+  dedodoMeio.attach(5);  //D1
+  dedoIndicador.attach(2);  //D4
+  dedoPolegar.attach(0);  //D3
+ 
   
   dedoMindinho.write(0);
   dedoAnelar.write(0);
@@ -38,46 +50,57 @@ void posicaoOriginal(){
   dedoIndicador.write(0);
   dedoPolegar.write(0);
   
+    dedoMindinho.detach();  //D5
+  dedoAnelar.detach();  //D0
+  dedodoMeio.detach();  //D1
+  dedoIndicador.detach();  //D4
+  dedoPolegar.detach();  //D3
+  
 }
 
 void apontarDedo(){
-  deAbertoparaFechado(dedoMindinho);
-    deAbertoparaFechado(dedoAnelar);
-      deFechadoparaAberto(dedodoMeio); //do meio funciona ao contrário
-      deFechadoparaAberto(dedoIndicador);
-        deAbertoparaFechado(dedoPolegar);
+  dedoMindinho.attach(14);  //D5
+  dedoAnelar.attach(16);  //D0
+  dedodoMeio.attach(5);  //D1
+  dedoIndicador.attach(2);  //D4
+  dedoPolegar.attach(0);  //D3
+  deAbertoparaFechado(dedoMindinho, 14);
+    deAbertoparaFechado(dedoAnelar, 16);
+      deFechadoparaAberto(dedodoMeio, 5); //do meio funciona ao contrário
+      deFechadoparaAberto(dedoIndicador, 2);
+        deAbertoparaFechado(dedoPolegar, 0);
         delay(4000);
         posicaoOriginal();
 }
 
 void homemAranha(){
-  deFechadoparaAberto(dedoMindinho);
-    deAbertoparaFechado(dedoAnelar);
-      deFechadoparaAberto(dedodoMeio); //do meio funciona ao contrário
-      deFechadoparaAberto(dedoIndicador);
-        deFechadoparaAberto(dedoPolegar);
+  deFechadoparaAberto(dedoMindinho, 14);
+    deAbertoparaFechado(dedoAnelar, 16);
+      deFechadoparaAberto(dedodoMeio, 5); //do meio funciona ao contrário
+      deFechadoparaAberto(dedoIndicador, 2);
+        deFechadoparaAberto(dedoPolegar, 0);
         
         delay(4000);
         posicaoOriginal();
 }
 
 void hangLoose(){
-    deFechadoparaAberto(dedoMindinho);
-    deAbertoparaFechado(dedoAnelar);
-      deFechadoparaAberto(dedodoMeio); //do meio funciona ao contrário
-      deAbertoparaFechado(dedoIndicador);
-        deFechadoparaAberto(dedoPolegar);
+    deFechadoparaAberto(dedoMindinho, 14);
+    deAbertoparaFechado(dedoAnelar, 16);
+      deFechadoparaAberto(dedodoMeio, 5); //do meio funciona ao contrário
+      deAbertoparaFechado(dedoIndicador, 2);
+        deFechadoparaAberto(dedoPolegar, 0);
         
         delay(4000);
         posicaoOriginal();
 }
 
 void revolver(){
-      deAbertoparaFechado(dedoMindinho);
-    deAbertoparaFechado(dedoAnelar);
-      deFechadoparaAberto(dedodoMeio); //do Meio funciona ao contrário
-      deFechadoparaAberto(dedoIndicador);
-        deFechadoparaAberto(dedoPolegar);
+      deAbertoparaFechado(dedoMindinho, 14);
+    deAbertoparaFechado(dedoAnelar, 16);
+      deFechadoparaAberto(dedodoMeio, 5); //do Meio funciona ao contrário
+      deFechadoparaAberto(dedoIndicador, 2);
+        deFechadoparaAberto(dedoPolegar, 0);
         delay(4000);
         posicaoOriginal();
 }
@@ -88,11 +111,9 @@ void setup() {
   Serial.begin(115200);
   pinMode(LED_BUILTIN, OUTPUT);
   
-  dedoMindinho.attach(14);  //D5
-  dedoAnelar.attach(16);  //D0
-  dedodoMeio.attach(5);  //D1
-  dedoIndicador.attach(2);  //D4
-  dedoPolegar.attach(0);  //D3
+ 
+  
+
 
   posicaoOriginal();
   
