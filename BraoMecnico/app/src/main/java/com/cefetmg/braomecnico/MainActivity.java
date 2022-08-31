@@ -24,6 +24,7 @@ public class MainActivity extends AppCompatActivity {
     Button buttonSkipWifi;
 
     Button hangloose, pointer, gun, spiderman;
+    Boolean canSend = true;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -47,26 +48,32 @@ public class MainActivity extends AppCompatActivity {
 
                     hangloose.setOnClickListener(
                             a->{
-                                sendHangloose();
-
+                                if(canSend){
+                                sendHangloose();}
                             }
                     );
 
                     spiderman.setOnClickListener(
                             b->{
-                                sendSpider();
+                                if(canSend) {
+                                    sendSpider();
+                                }
                             }
                     );
 
                     gun.setOnClickListener(
                             c->{
+                                if(canSend){
                                 sendGun();
+                                }
                             }
                     );
 
                     pointer.setOnClickListener(
                             d->{
+                                if(canSend){
                                 sendPointer();
+                                }
                             }
                     );
 
@@ -80,7 +87,9 @@ public class MainActivity extends AppCompatActivity {
     }
 
     void sendSpider(){
+        Toast.makeText(getApplicationContext(),"Enviando: homem-aranha", Toast.LENGTH_SHORT).show();
 
+        canSend = false;
         String address = "http://192.168.4.1/";
         Retrofit retrofit = new Retrofit.Builder().baseUrl(address).addConverterFactory(GsonConverterFactory.create()).build();
         JsonPlaceHolderApi jsonPlaceHolderApi = retrofit.create(JsonPlaceHolderApi.class);
@@ -88,25 +97,21 @@ public class MainActivity extends AppCompatActivity {
         call.enqueue(new Callback<List<Post>>() {
             @Override
             public void onResponse(Call<List<Post>> call, Response<List<Post>> response) {
-                Toast.makeText(getApplicationContext(),"Enviado.", Toast.LENGTH_SHORT).show();
-
-
+                canSend = true;
             }
 
             @Override
             public void onFailure(Call<List<Post>> call, Throwable t) {
-                Toast.makeText(getApplicationContext(),"Falha.",Toast.LENGTH_SHORT).show();
-                Toast.makeText(getApplicationContext(),t.toString(),Toast.LENGTH_SHORT).show();
-
-
-
+                canSend = true;
             }
         });
 
     }
 
     void sendGun(){
+        Toast.makeText(getApplicationContext(),"Enviando: arma", Toast.LENGTH_SHORT).show();
 
+        canSend = false;
         String address = "http://192.168.4.1/";
         Retrofit retrofit = new Retrofit.Builder().baseUrl(address).addConverterFactory(GsonConverterFactory.create()).build();
         JsonPlaceHolderApi jsonPlaceHolderApi = retrofit.create(JsonPlaceHolderApi.class);
@@ -114,22 +119,22 @@ public class MainActivity extends AppCompatActivity {
         call.enqueue(new Callback<List<Post>>() {
             @Override
             public void onResponse(Call<List<Post>> call, Response<List<Post>> response) {
-                Toast.makeText(getApplicationContext(),"Enviado.", Toast.LENGTH_SHORT).show();
-
-
+                canSend = true;
             }
 
             @Override
             public void onFailure(Call<List<Post>> call, Throwable t) {
-                Toast.makeText(getApplicationContext(),"Falha.",Toast.LENGTH_SHORT).show();
-
-
+                canSend = true;
             }
         });
 
     }
 
     void sendPointer(){
+
+        Toast.makeText(getApplicationContext(),"Enviando: apontar o dedo", Toast.LENGTH_SHORT).show();
+
+        canSend = false;
         String address = "http://192.168.4.1/";
         Retrofit retrofit = new Retrofit.Builder().baseUrl(address).addConverterFactory(GsonConverterFactory.create()).build();
         JsonPlaceHolderApi jsonPlaceHolderApi = retrofit.create(JsonPlaceHolderApi.class);
@@ -137,20 +142,21 @@ public class MainActivity extends AppCompatActivity {
         call.enqueue(new Callback<List<Post>>() {
             @Override
             public void onResponse(Call<List<Post>> call, Response<List<Post>> response) {
-                Toast.makeText(getApplicationContext(),"Enviado.", Toast.LENGTH_SHORT).show();
-
-
+                canSend = true;
             }
 
             @Override
             public void onFailure(Call<List<Post>> call, Throwable t) {
-                Toast.makeText(getApplicationContext(),"Falha.",Toast.LENGTH_SHORT).show();
 
-
+                canSend = true;
             }
         });
     }
     void sendHangloose(){
+
+        Toast.makeText(getApplicationContext(),"Enviando: Hang-loose", Toast.LENGTH_SHORT).show();
+
+        canSend = false;
         String address = "http://192.168.4.1/";
         Retrofit retrofit = new Retrofit.Builder().baseUrl(address).addConverterFactory(GsonConverterFactory.create()).build();
         JsonPlaceHolderApi jsonPlaceHolderApi = retrofit.create(JsonPlaceHolderApi.class);
@@ -158,16 +164,12 @@ public class MainActivity extends AppCompatActivity {
         call.enqueue(new Callback<List<Post>>() {
             @Override
             public void onResponse(Call<List<Post>> call, Response<List<Post>> response) {
-                Toast.makeText(getApplicationContext(),"Enviado.", Toast.LENGTH_SHORT).show();
-
-
+                canSend = true;
             }
 
             @Override
             public void onFailure(Call<List<Post>> call, Throwable t) {
-                Toast.makeText(getApplicationContext(),"Falha.",Toast.LENGTH_SHORT).show();
-
-
+                canSend = true;
             }
         });
     }

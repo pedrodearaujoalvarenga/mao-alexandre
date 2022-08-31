@@ -36,7 +36,7 @@
         android:layout_width="fill_parent"
         android:layout_height="330dp"
         android:gravity="bottom|center"
-        android:text="Nome: Braco_Mecanico\nA rede não possui senha."
+        android:text="Nome: Braco_Mecanico\nSenha: 123456789"
         android:textColor="@color/cor_de_texto"
         android:textSize="20sp"
         app:layout_constraintBottom_toBottomOf="parent"

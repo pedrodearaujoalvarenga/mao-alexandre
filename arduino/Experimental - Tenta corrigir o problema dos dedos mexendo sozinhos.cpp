@@ -1,5 +1,5 @@
-#include <WiFi.h>
-#include <ESP32Servo.h>
+#include <Servo.h>
+#include <ESP8266WiFi.h>
 
 const char * ssid = "Braco_Mecanico";
 const char * password = "123456789";
@@ -10,6 +10,8 @@ Servo dedoMindinho, dedoAnelar, dedodoMeio, dedoIndicador, dedoPolegar;
 WiFiServer server(80);
 
 void deAbertoparaFechado(Servo serv){
+	
+serv.attach();
 
   int pos;
   for (pos = serv.read(); pos <= 145; pos += 1) { // movimento de 0 a 180º
@@ -17,48 +19,86 @@ void deAbertoparaFechado(Servo serv){
     serv.write(pos);              // escreve posicao em meuservo
     delay(20);                       // aguarda 35ms
   }
+  
+  serv.detach();
 }
 
 void deFechadoparaAberto(Servo serv){
 
+serv.attach();
   int pos;
   for (pos = serv.read(); pos >= -0; pos -= 1) { // movimento de 0 a 180º
     // crescente
     serv.write(pos);              // escreve posicao em meuservo
     delay(20);                       // aguarda 35ms
   }
+  
+  serv.detach()
+}
+
+void posicaoOriginal(){
+  dedoMindinho.attach(14);  //D5
+  dedoAnelar.attach(16);  //D0
+  dedodoMeio.attach(5);  //D1
+  dedoIndicador.attach(2);  //D4
+  dedoPolegar.attach(0);  //D3
+ 
+  
+  dedoMindinho.write(0);
+  dedoAnelar.write(0);
+  dedodoMeio.write(180);
+  dedoIndicador.write(0);
+  dedoPolegar.write(0);
+  
+    dedoMindinho.detach();  //D5
+  dedoAnelar.detach();  //D0
+  dedodoMeio.detach();  //D1
+  dedoIndicador.detach();  //D4
+  dedoPolegar.detach();  //D3
+  
 }
 
 void apontarDedo(){
+
   deAbertoparaFechado(dedoMindinho);
     deAbertoparaFechado(dedoAnelar);
-      deAbertoparaFechado(dedodoMeio);
+      deFechadoparaAberto(dedodoMeio); //do meio funciona ao contrário
       deFechadoparaAberto(dedoIndicador);
         deAbertoparaFechado(dedoPolegar);
+        delay(4000);
+        posicaoOriginal();
 }
 
 void homemAranha(){
   deFechadoparaAberto(dedoMindinho);
     deAbertoparaFechado(dedoAnelar);
-      deAbertoparaFechado(dedodoMeio);
+      deFechadoparaAberto(dedodoMeio); //do meio funciona ao contrário
       deFechadoparaAberto(dedoIndicador);
         deFechadoparaAberto(dedoPolegar);
+        
+        delay(4000);
+        posicaoOriginal();
 }
 
 void hangLoose(){
     deFechadoparaAberto(dedoMindinho);
     deAbertoparaFechado(dedoAnelar);
-      deAbertoparaFechado(dedodoMeio);
+      deFechadoparaAberto(dedodoMeio); //do meio funciona ao contrário
       deAbertoparaFechado(dedoIndicador);
         deFechadoparaAberto(dedoPolegar);
+        
+        delay(4000);
+        posicaoOriginal();
 }
 
 void revolver(){
       deAbertoparaFechado(dedoMindinho);
     deAbertoparaFechado(dedoAnelar);
-      deAbertoparaFechado(dedodoMeio);
+      deFechadoparaAberto(dedodoMeio); //do Meio funciona ao contrário
       deFechadoparaAberto(dedoIndicador);
         deFechadoparaAberto(dedoPolegar);
+        delay(4000);
+        posicaoOriginal();
 }
 
 
@@ -66,25 +106,21 @@ void setup() {
 
   Serial.begin(115200);
   pinMode(LED_BUILTIN, OUTPUT);
-
-//ESP32: 23 22 1 3 18 19
-//ESP8266: 34-D1 36-D5 32-D6 33-D7 25-D8
   
-  dedoMindinho.attach(23);  //D1
-  dedoAnelar.attach(22);  //D5
-  dedodoMeio.attach(1);  //D6
-  dedoIndicador.attach(3);  //D7
-  dedoPolegar.attach(18);  //D8
-//vermelho no VIN
-//PRETO no GND 
-//positivo  
+ 
+  
+
+
+  posicaoOriginal();
+  
+  
   // Connect to Wi-Fi network with SSID and password
   Serial.print("Setting AP (Access Point)…");
   // Remove the password parameter, if you want the AP (Access Point) to be open
   WiFi.softAP(ssid, password);
 
   IPAddress IP = WiFi.softAPIP();
-  Serial.print("AP IP address: ");
+  Serial.print("AP IP address: ");https://lastminuteengineers.b-cdn.net/wp-content/uploads/iot/ESP8266-Pinout-NodeMCU.png
   Serial.println(IP);
   
   server.begin();
@@ -126,8 +162,6 @@ void loop() {
 
    
         if (currentLine.endsWith("GET /HANGLOOSE")) {
-                      client.println("HTTP/1.1 200 OK");
-                      
           digitalWrite(LED_BUILTIN, HIGH);
           delay(500);
           digitalWrite(LED_BUILTIN, LOW);
@@ -136,7 +170,6 @@ void loop() {
 hangLoose();
           }
         if (currentLine.endsWith("GET /SPIDERMAN")) {
-                      client.println("HTTP/1.1 200 OK");
                     digitalWrite(LED_BUILTIN, HIGH);
           delay(500);
           digitalWrite(LED_BUILTIN, LOW);
@@ -145,7 +178,6 @@ hangLoose();
 homemAranha();
         }
         if (currentLine.endsWith("GET /POINTER")) {
-                      client.println("HTTP/1.1 200 OK");
                     digitalWrite(LED_BUILTIN, HIGH);
           delay(500);
           digitalWrite(LED_BUILTIN, LOW);
@@ -154,7 +186,6 @@ homemAranha();
 apontarDedo();
 }
         if (currentLine.endsWith("GET /GUN")) {
-                      client.println("HTTP/1.1 200 OK");
                     digitalWrite(LED_BUILTIN, HIGH);
           delay(500);
           digitalWrite(LED_BUILTIN, LOW);

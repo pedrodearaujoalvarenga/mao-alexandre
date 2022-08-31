@@ -12,7 +12,7 @@ WiFiServer server(80);
 void deAbertoparaFechado(Servo serv){
 
   int pos;
-  for (pos = 0; pos <= 145; pos += 1) { // movimento de 0 a 180º
+  for (pos = serv.read(); pos <= 145; pos += 1) { // movimento de 0 a 180º
     // crescente
     serv.write(pos);              // escreve posicao em meuservo
     delay(20);                       // aguarda 35ms
@@ -22,43 +22,64 @@ void deAbertoparaFechado(Servo serv){
 void deFechadoparaAberto(Servo serv){
 
   int pos;
-  for (pos = 125; pos >= -0; pos -= 1) { // movimento de 0 a 180º
+  for (pos = serv.read(); pos >= -0; pos -= 1) { // movimento de 0 a 180º
     // crescente
     serv.write(pos);              // escreve posicao em meuservo
     delay(20);                       // aguarda 35ms
   }
 }
 
+void posicaoOriginal(){
+
+  
+  dedoMindinho.write(0);
+  dedoAnelar.write(0);
+  dedodoMeio.write(180);
+  dedoIndicador.write(0);
+  dedoPolegar.write(0);
+  
+}
+
 void apontarDedo(){
   deAbertoparaFechado(dedoMindinho);
     deAbertoparaFechado(dedoAnelar);
-      deAbertoparaFechado(dedodoMeio);
+      deFechadoparaAberto(dedodoMeio); //do meio funciona ao contrário
       deFechadoparaAberto(dedoIndicador);
         deAbertoparaFechado(dedoPolegar);
+        delay(4000);
+        posicaoOriginal();
 }
 
 void homemAranha(){
   deFechadoparaAberto(dedoMindinho);
     deAbertoparaFechado(dedoAnelar);
-      deAbertoparaFechado(dedodoMeio);
+      deFechadoparaAberto(dedodoMeio); //do meio funciona ao contrário
       deFechadoparaAberto(dedoIndicador);
         deFechadoparaAberto(dedoPolegar);
+        
+        delay(4000);
+        posicaoOriginal();
 }
 
 void hangLoose(){
     deFechadoparaAberto(dedoMindinho);
     deAbertoparaFechado(dedoAnelar);
-      deAbertoparaFechado(dedodoMeio);
+      deFechadoparaAberto(dedodoMeio); //do meio funciona ao contrário
       deAbertoparaFechado(dedoIndicador);
         deFechadoparaAberto(dedoPolegar);
+        
+        delay(4000);
+        posicaoOriginal();
 }
 
 void revolver(){
       deAbertoparaFechado(dedoMindinho);
     deAbertoparaFechado(dedoAnelar);
-      deAbertoparaFechado(dedodoMeio);
+      deFechadoparaAberto(dedodoMeio); //do Meio funciona ao contrário
       deFechadoparaAberto(dedoIndicador);
         deFechadoparaAberto(dedoPolegar);
+        delay(4000);
+        posicaoOriginal();
 }
 
 
@@ -67,11 +88,14 @@ void setup() {
   Serial.begin(115200);
   pinMode(LED_BUILTIN, OUTPUT);
   
-  dedoMindinho.attach(34);  //D1
-  dedoAnelar.attach(36);  //D5
-  dedodoMeio.attach(32);  //D6
-  dedoIndicador.attach(33);  //D7
-  dedoPolegar.attach(25);  //D8
+  dedoMindinho.attach(14);  //D5
+  dedoAnelar.attach(16);  //D0
+  dedodoMeio.attach(5);  //D1
+  dedoIndicador.attach(2);  //D4
+  dedoPolegar.attach(0);  //D3
+
+  posicaoOriginal();
+  
   
   // Connect to Wi-Fi network with SSID and password
   Serial.print("Setting AP (Access Point)…");
@@ -79,7 +103,7 @@ void setup() {
   WiFi.softAP(ssid, password);
 
   IPAddress IP = WiFi.softAPIP();
-  Serial.print("AP IP address: ");
+  Serial.print("AP IP address: ");https://lastminuteengineers.b-cdn.net/wp-content/uploads/iot/ESP8266-Pinout-NodeMCU.png
   Serial.println(IP);
   
   server.begin();
